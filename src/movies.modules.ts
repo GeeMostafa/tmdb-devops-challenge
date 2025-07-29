@@ -94,32 +94,6 @@ transform: scale(1.1);
 }
 }
 
-
-.searchBar
-{
-input, button {
-margin: auto;
-outline: none;
-border:none;
-border-radius:20px;
-position: absolute;
-bottom:75%;
-transform: translate(-50%, -50%);
-text-align: center;
-}
->input {
-height: 25px;
-width: 25%;
-box-shadow: 1px 1px 6px -2px grey;
-padding: 10px;
-left:50%;
-font-size: 22px;
-&::placeholder{
-font-size: 16px;
-}
-}
-
-
 > button {
 height: 46px;
 padding: 0 25px;

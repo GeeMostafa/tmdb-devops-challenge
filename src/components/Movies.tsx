@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { MoviesWrapper } from '../movies.modules'
 import axios from "axios";
-import { epDiscover, epSearch } from '../endpoints';
+import { epDiscover } from '../endpoints';
 
 interface MovieDto {
 
@@ -14,18 +14,16 @@ interface MovieDto {
 const Movies = () => {
 
     const [showMovies, setShowMovies] = useState<MovieDto[]>([]);
-    const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    
+
 
         const fetchMovies = async () => {
             try{
-                const endpoint = searchQuery ? epSearch : epDiscover;
+                const endpoint = epDiscover;
                 const response = await axios.get(endpoint, {
                     params: {
-                        query: searchQuery,                        
                         page: currentPage
                     }
                 });
@@ -58,13 +56,7 @@ const Movies = () => {
   return (
     <MoviesWrapper>
 
-        <h1>TMDB Code Challenge</h1>
-        <div className="searchBar">
-            <input type='text' value={searchQuery} onChange={(e) => {
-                setSearchQuery(e.target.value);
-            }}/>
-            <button onClick={showAll}>Show All</button>
-        </div>
+        <h1>Action Movie Database</h1>
         <div className="movieCard">
         {showMovies.map( (items) => {
             return (
