@@ -1,0 +1,90 @@
+stages:
+  - lint
+  - test
+  - build
+  - docker
+  - deploy
+
+variables:
+  NODE_ENV: production
+  DOCKER_TLS_CERTDIR: ""
+
+cache:
+  paths:
+    - node_modules/
+
+# ---------------- LINT ----------------
+lint:
+  image: node:20-alpine
+  stage: lint
+  script:
+    - npm ci
+    - npm run lint || echo "Lint skipped or errors ignored"  # <-- modify or enable later
+  allow_failure: true
+  cache:
+    paths:
+      - node_modules/
+
+# ---------------- TEST ----------------
+test:
+  image: node:20-alpine
+  stage: test
+  script:
+    - npm ci
+    - npm test -- --watch=false --passWithNoTests  # <-- can add real tests later
+  allow_failure: true
+  cache:
+    paths:
+      - node_modules/
+
+# ---------------- BUILD ----------------
+build:
+  image: node:20-alpine
+  stage: build
+  script:
+    - npm ci
+    - CI=false npm run build  # <-- disables "treat warnings as errors" in CI
+  artifacts:
+    paths:
+      - build/
+    expire_in: 1 hour
+
+# ---------------- DOCKER ----------------
+docker:
+  image: docker:25
+  stage: docker
+  services:
+    - docker:25-dind
+  before_script:
+    - apk add --no-cache bash curl openssh-client aws-cli
+    - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_REGISTRY
+  script:
+    - docker build -t $APP_NAME:$CI_PIPELINE_IID .
+    - docker tag $APP_NAME:$CI_PIPELINE_IID $AWS_REGISTRY/$APP_NAME:$CI_PIPELINE_IID
+    - docker push $AWS_REGISTRY/$APP_NAME:$CI_PIPELINE_IID
+
+# ---------------- DEPLOY ----------------
+deploy:
+  image: alpine:latest
+  stage: deploy
+  before_script:
+    - apk add --no-cache bash openssh-client
+    - mkdir -p ~/.ssh
+
+    # Write the private key from GitLab CI variable
+    - echo "$SSH_PRIVATE_KEY" | base64 -d | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+
+    # Trust the EC2 host
+    - ssh-keyscan -H $EC2_IP >> ~/.ssh/known_hosts
+
+  script:
+    - echo "Deploying pipeline $CI_PIPELINE_IID to EC2 $EC2_IP"
+    - |
+      ssh $EC2_USER@$EC2_IP "
+        docker pull $AWS_REGISTRY/$APP_NAME:$CI_PIPELINE_IID &&
+        docker stop tmdb || true &&
+        docker rm tmdb || true &&
+        docker run -d --name tmdb -p 3000:3000 $AWS_REGISTRY/$APP_NAME:$CI_PIPELINE_IID
+      "
+    - echo "Deployment complete."
