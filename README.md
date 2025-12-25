@@ -19,9 +19,9 @@ I completed **Challenges 1 & 2** with an emphasis on automation, CI/CD, Infrastr
 ---
 
 ## Application
-- **Source Repo:** https://gitlab.com/Mostafa1.1/tmdb_challenge
-- **Local Test:** http://localhost:3000
-- **Deployed URL:** http://tmdb-devops-challenge.work.gd/
+- **Source Repo on  Github:**  https://github.com/GeeMostafa/tmdb-devops-challenge 
+- **Source Repo on Gitlab:** https://gitlab.com/Mostafa1.1/tmdb_challenge
+- **Application URL:** http://tmdb-devops-challenge.work.gd/
 
 ---
 
@@ -52,7 +52,7 @@ Pipeline stages:
 - Non-root user inside container
 - `npm ci` instead of `npm install` to ensure fast, clean, and reproducible installs
 - AWS ECR used as container registry
-- Image pushed via GitLab CI using IAM user credentials
+- Image pushed via GitLab CI using IAM user access key
 
 ---
 
