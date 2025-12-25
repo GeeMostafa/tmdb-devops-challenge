@@ -27,7 +27,7 @@ I completed **Challenges 1 & 2** with an emphasis on automation, CI/CD, Infrastr
 
 ## Architecture Summary
 - AWS VPC with public subnet
-- EC2 (Free Tier)
+- EC2 >> public_ip = "34.209.79.13"
 - Dockerized Node.js application
 - Nginx as reverse proxy
 - GitLab CI/CD pipeline
