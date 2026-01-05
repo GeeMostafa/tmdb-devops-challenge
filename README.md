@@ -13,8 +13,8 @@ I completed **Challenges 1 & 2** with an emphasis on automation, CI/CD, Infrastr
 ---
 
 ## Time Spent
-- **Total time:** 6 hours  
-- **Duration:** 3 days (2 hours/day)
+- **Total time:** 8 hours  
+- **Duration:** 4 days (2 hours/day)
 
 ---
 
@@ -28,8 +28,7 @@ I completed **Challenges 1 & 2** with an emphasis on automation, CI/CD, Infrastr
 ## Architecture Summary
 - AWS VPC with public subnet
 - EC2 >> public_ip = "34.209.79.13"
-- Dockerized Node.js application
-- Nginx as reverse proxy
+- Dockerized a Node.js application and Nginx, with Nginx serving as a reverse proxy
 - GitLab CI/CD pipeline
 - Terraform for infrastructure provisioning
 - AWS ECR for container registry
