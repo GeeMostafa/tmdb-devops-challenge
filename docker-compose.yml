@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  tmdb-app:
+    image: $AWS_REGISTRY/$APP_NAME:latest   # Pull from ECR
+    container_name: tmdb-app
+    restart: always
+    environment:
+      - NODE_ENV=production
+    expose:
+      - "3000"            # Exposed internally to Nginx
+    networks:
+      - tmdb-network
+
+  nginx:
+    image: nginx:latest
+    container_name: tmdb-nginx
+    restart: always
+    ports:
+      - "80:80"           # Public port
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - tmdb-app
+    networks:
+      - tmdb-network
+
+networks:
+  tmdb-network:
+    driver: bridge
