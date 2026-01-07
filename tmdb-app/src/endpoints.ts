@@ -1,3 +1,3 @@
-const apiKey = "10d2cbbcafb7f20bcb4607ceb2aee029";
+const apiKey = process.env.API_KEY;
 
 export const epDiscover = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=28`;
